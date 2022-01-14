@@ -9,8 +9,11 @@
   "author": "tmddnjs1533",
   "license": "ISC",
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "antd": "^4.18.3",
     "next": "^12.0.8",
-    "prop-types": "^15.8.1"
+    "prop-types": "^15.8.1",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
     "eslint": "^8.6.0",
