@@ -1,2 +1,2 @@
-/prepare/front/node_modules/
-/prepare/front/.next/
+node_modules/
+.next/
