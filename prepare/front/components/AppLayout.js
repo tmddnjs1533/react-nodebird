@@ -6,6 +6,7 @@ import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { userState } from "../reducers/user";
 
 const SearchInput = styled(Input.Search)`
   vertical-align: middle;
@@ -13,7 +14,7 @@ const SearchInput = styled(Input.Search)`
 
 const AppLayout = ({ children }) => {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { isLoggedIn } = useSelector(userState);
   return (
     <div>
       <Menu mode="horizontal">
@@ -27,7 +28,7 @@ const AppLayout = ({ children }) => {
             <a>프로필</a>
           </Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item disabled>
           <SearchInput enterButton />
         </Menu.Item>
         <Menu.Item>
