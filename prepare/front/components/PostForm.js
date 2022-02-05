@@ -1,12 +1,33 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Upload, Input, Button } from "antd";
+import { Input, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, postState } from "../reducers/post";
+import styled from "styled-components";
+
+const StyledLabel = styled.label`
+  border: 1px solid #ccc;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  &:hover {
+    border-color: #1890ff;
+  }
+`;
+
+const StyledForm = styled.form`
+  display: block;
+  height: 86px;
+  margin-bottom: 20px;
+`;
 
 const PostForm = () => {
-  const { control, handleSubmit, setValue } = useForm();
+  const { register, control, handleSubmit, setValue } = useForm();
   const { imagePaths, postAdded } = useSelector(postState);
   const dispatch = useDispatch();
   const [fileList, setFileList] = useState([]);
@@ -21,27 +42,8 @@ const PostForm = () => {
     }
   }, []);
 
-  const handleChange = useCallback((info) => {
-    let fileList = [...info.fileList];
-
-    // 1. Limit the number of uploaded files
-    // Only to show two recent uploaded files, and old ones will be replaced by the new
-    fileList = fileList.slice(-2);
-
-    // 2. Read from response and show file link
-    fileList = fileList.map((file) => {
-      if (file.response) {
-        // Component will show file.url as link
-        file.url = file.response.url;
-      }
-      return file;
-    });
-    setFileList(fileList);
-    // setValue("file", fileList);
-  }, []);
-
   return (
-    <form encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)}>
+    <StyledForm encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)}>
       <Controller
         control={control}
         name="text"
@@ -53,37 +55,37 @@ const PostForm = () => {
           />
         )}
       />
-
-      <div>
-        <Upload onChange={handleChange} fileList={fileList}>
-          <Button icon={<UploadOutlined />}>이미지 업로드</Button>
-        </Upload>
-        <Button
-          type="primary"
-          style={{ float: "right" }}
-          htmlType="submit"
-          onClick={handleSubmit(onSubmit)}
-        >
-          짹짹
-        </Button>
-      </div>
-      <div>
-        {imagePaths.map((v) => {
-          return (
-            <div key={v} style={{ display: "inline-block" }}>
-              <img
-                src={"http://localhost:3065/" + v}
-                style={{ width: "200px" }}
-                alt={v}
-              />
-              <div>
-                <Button>제거</Button>
+      <div style={{ float: "left" }}>
+        <input type="file" id="file" multiple hidden {...register("file")} />
+        <StyledLabel htmlFor="file">
+          <UploadOutlined />
+        </StyledLabel>
+        <div>
+          {imagePaths.map((v) => {
+            return (
+              <div key={v} style={{ display: "inline-block" }}>
+                <img
+                  src={"http://localhost:3065/" + v}
+                  style={{ width: "200px" }}
+                  alt={v}
+                />
+                <div>
+                  <Button>제거</Button>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </form>
+      <Button
+        type="primary"
+        style={{ float: "right" }}
+        htmlType="submit"
+        onClick={handleSubmit(onSubmit)}
+      >
+        짹짹
+      </Button>
+    </StyledForm>
   );
 };
 
